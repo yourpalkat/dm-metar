@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import ShowReports from './components/ShowReports';
-import generateFakeData from './functions/generateFakeData';
-import * as reportParser from './functions/reportParser';
+import fetchNewReports from './functions/fetchNewReports';
+import processReports from './functions/processReports';
 
 class App extends Component {
 
@@ -16,10 +16,19 @@ class App extends Component {
   }
 
   handleLoadData = () => {
-    const rawReportString = generateFakeData();
-    const rawReportArray = reportParser.splitReports(rawReportString);
-    const allReports = reportParser.parseReports(rawReportArray);
-    console.log(allReports);
+    this.setState({
+      allReports: [],
+      uniqueAirports: [],
+      loading: true,
+    }, async () => {
+      const allReports = await fetchNewReports();
+      const uniqueAirports = await processReports(allReports);
+      this.setState({
+        allReports,
+        uniqueAirports,
+        loading: false,
+      });
+    });
   }
 
   render() {
@@ -31,9 +40,8 @@ class App extends Component {
           </h1>
         </header>
         <main>
-          {this.state.loading ? <p>Processing reports...</p> : (
-            <ShowReports total={this.state.allReports.length} uniqueAirports={this.state.uniqueAirports} />
-          )}
+          {this.state.loading && <p>Processing reports...</p>}
+          {this.state.uniqueAirports.length > 0 && <ShowReports total={this.state.allReports.length} uniqueAirports={this.state.uniqueAirports} />}
           <button type='button' onClick={this.handleLoadData}>Load new reports</button>
         </main>
       </div>

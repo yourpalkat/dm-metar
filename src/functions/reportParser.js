@@ -13,7 +13,9 @@ export function parseReports(rawReportArray) {
   rawReportArray.forEach(report => {
     const parsedReport = {
       icaoCode: '',
-      timestamp: {},
+      timestampDate: 1,
+      timestampHour: 0,
+      timestampMinute: 0,
       windSpeedInMps: 0,
       windDirection: '',
       windGust: 0,
@@ -24,8 +26,13 @@ export function parseReports(rawReportArray) {
 
     // The first item is the ICAO code
     parsedReport.icaoCode = reportArray[0];
+
     // The second item is the timestamp
-    parsedReport.timestamp = parseTime(reportArray[1]);
+    const timeInfo = parseTime(reportArray[1]);
+    parsedReport.timestampDate = timeInfo.dayOfMonth;
+    parsedReport.timestampHour = timeInfo.hour;
+    parsedReport.timestampMinute = timeInfo.minute;
+
     // The third item is the wind information
     const windInfo = parseWind(reportArray[2]);
     parsedReport.windSpeedInMps = windInfo.speed;
@@ -56,20 +63,27 @@ function parseWind (windString) {
   // Expects a string of <direction><speed><gusts?><unit>
   // Dir is 3 digits, speed is 2-3 digits, min 00, gusts is 2 digits prefixed with G and is optional, unit is KT or MPS
   // Returns an object direction as a string, speed and gusts as integers, normalized to MPS
+
   const windArray = windString.split('');
+
+  // Remove first 3 digits, which are always windspeed
   const direction = windArray.splice(0,3).join('');
   let gust = 0;
   if (windArray.indexOf('G') !== -1) {
+    // If there's gust data present, pull it out, convert it to an integer
     const gustArray = windArray.splice(windArray.indexOf('G'), 3);
     gust = parseInt(gustArray.splice(1, 2).join(''), 10);
   }
   let unit = '';
   if (windArray.indexOf('K') !== -1) {
+    // If units are knots, remove the last two characters
     unit = windArray.splice(windArray.length - 2, 2).join('');
   } else {
+    // Otherwise, units are MPS, so remove the last three characters
     unit = windArray.splice(windArray.length - 3, 3).join('');
   }
   let speed = parseInt(windArray.join(''), 10);
+  // Normalize speed so it's always in MPS
   if (unit === 'KT') speed = Math.round(speed / 2);
 
   const windObject = {

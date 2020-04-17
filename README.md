@@ -19,47 +19,46 @@ Write a script to generate a few hundred thousand random reports one per line. Y
 
 
 ### Assumptions:
-- Report stream is a string
-- Individual reports are separated by a newline
-- Reports are space-delimited (there is one space between each data point, eg 'YYZ 122201Z 12023MPS')
+- Report stream is a single string, inside which individual reports are separated by a newline
+- Data within each report is space-delimited (there is one space between each data point, eg 'YYZ 122201Z 12023MPS')
 - Each of the three data points (Airport code, timestamp, wind info) are always present
-- Timestamp provides day of month, hours and minutes suffixed with a Z; for date parsing purposes, assume the Z indicates Zulu time (ie, GMT) and that all records are for the same month
+- Timestamp provides day of month, hours and minutes suffixed with a Z; for date parsing purposes, assume the Z indicates Zulu time (ie, GMT) and that all records in stream are for the same month
 
 ### Steps:
 - Break report stream into an array of individual report strings
 - For each report string:
   - Break report string into three on the space (Airport code, Timestamp, Wind info)
   - Parse string and build an object for each record:
-    { 
+    ```{ 
       icaoCode: airport code string
-      timestamp: parse string into date object containing day, hour, minute, based on assumptions above
+      timestampDay/Hour/Minute: parse timestamp string into integers for day, hour, minute, based on assumptions above
       windSpeed: parse from Wind info string, normalize to MPS
       windDirection: parse from Wind into string
       windGust: parse from Wind info string, can be null
-    }
+    }```
   - Push object to allRecords array (Not strictly needed for this task, but now that the data's nicely organized we may as well keep it for potential future use)
   - Check against an array of unique airports. If this airport code is not in that array, push a new object to it:
-    {
+    ```{
       icaoCode: airport code string
       latestWindSpeed: parsed windspeed from record object above
       latestWindGust: from record object above
       latestWindDirection: from record object above
-      latestTimestamp: parsed time from record object above
+      latestTimestamp day/hour/minute: parsed time data from record object above
       averageWindSpeed: same as latestWindSpeed, since there's only one record
       sumWindspeed: same as latestWinsSpeed, since there's only one record
       totalReports: 1, since there's only one record
-    }
+    }```
   - If the airport code IS in the uniques array, replace that record with this one:
-    {
+    ```{
       icaoCode: airport code string
       latestWindSpeed: parsed windspeed from record object above IF new timestamp is more recent than latestTimestamp
       latestWindGust: windGust from record object above IF new timestamp is more recent than latestTimestamp
       latestWindDirection: windDirection from record object above IF new timestamp is more recent than latestTimestamp
-      latestTimestamp: parsed time from record object above IF new timestamp is more recent than latestTimestamp
+      latestTimestamp day/hour/minute: parsed time data from record object above IF new timestamp is more recent than latestTimestamp
       averageWindSpeed: sumWindspeed  / totalReports
       sumWindspeed: sumWindspeed + latestWinsSpeed
       totalReports: totalReports ++
-    }
+    }```
 - Draw our display: 
   - Show total number of reports (allRecords.length)
   - For each record in unique airports array, display:
