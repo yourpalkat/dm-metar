@@ -5,7 +5,7 @@ const ShowReports = ({ total, uniqueAirports }) => {
   return (
     <article className='report'>
       <h2>Final Report</h2>
-        <p>Processed {total} METAR records.</p>
+        <p>Processed {total} METAR records. Showing reports for {uniqueAirports.length} unique ICAO codes.</p>
         <ul>
           <li className='header-row'>
             <div>ICAO Code</div>

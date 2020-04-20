@@ -25,6 +25,7 @@ class App extends Component {
       uniqueAirports: [],
       loading: true,
     }, async () => {
+      window.scrollTo(0, 0);
       const allReports = await fetchNewReports();
       const uniqueAirports = await processReports(allReports);
       this.setState({

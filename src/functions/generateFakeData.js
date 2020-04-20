@@ -1,6 +1,6 @@
 function generateFakeData () {
-  const NUMBER_OF_REPORTS = 100;
-  const NUMBER_OF_ICAO_CODES = 10;
+  const NUMBER_OF_REPORTS = 200000;
+  const NUMBER_OF_ICAO_CODES = 200;
   
   let metarReports = [];
 
