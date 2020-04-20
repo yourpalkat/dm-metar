@@ -1,12 +1,30 @@
 import React from 'react';
 
 const IndividualReport = ({ report }) => {
+  let suffix = '';
+  const date = report.latestTimeDate.toString();
+  switch (date[date.length - 1]) {
+    case '1':
+      suffix = 'st';
+      break;
+    case '2':
+      suffix = 'nd';
+      break;
+    case '3':
+      suffix = 'rd';
+      break;
+    default:
+      suffix = 'th';
+  }
+
+
   return (
     <li>
-      <p>ICAO Code: {report.icaoCode}</p>
-      <p>Latest windspeed: {report.latestWindSpeed} MPS, {report.latestWindGust > 0 && `${report.latestWindGust} gusts`} bearing {report.latestWindDirection} as of day {report.latestTimeDate}, {report.latestTimeHour}:{report.latestTimeMinute} Zulu</p>
-      <p>Average windspeed: {report.averageWindSpeed} MPS</p>
-      <p>{report.totalReports} reports from this location</p>
+      <div>{report.icaoCode}</div>
+      <div>{report.latestWindDirection}&deg; {report.latestWindSpeed} MPS {report.latestWindGust > 0 && `G: ${report.latestWindGust}`}</div>
+      <div>{report.latestTimeDate}{suffix}, {report.latestTimeHour < 10 && '0'}{report.latestTimeHour}{report.latestTimeMinute < 10 && '0'}{report.latestTimeMinute} GMT</div>
+      <div>{report.averageWindSpeed} MPS</div>
+      <div>{report.totalReports}</div>
     </li>
   );
 }

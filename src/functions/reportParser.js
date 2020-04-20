@@ -45,7 +45,7 @@ export function parseReports(rawReportArray) {
   return allParsedReports;
 }
 
-function parseTime (timeString) {
+export function parseTime (timeString) {
   // Expects a string of DDHHMMZ: day, hour, minute, 'Z'
   // Returns an object containing date, hour and minute as integers
   const dayOfMonth = timeString.slice(0, 2);
@@ -59,7 +59,7 @@ function parseTime (timeString) {
   return timeObject;
 }
 
-function parseWind (windString) {
+export function parseWind (windString) {
   // Expects a string of <direction><speed><gusts?><unit>
   // Dir is 3 digits, speed is 2-3 digits, min 00, gusts is 2 digits prefixed with G and is optional, unit is KT or MPS
   // Returns an object direction as a string, speed and gusts as integers, normalized to MPS
@@ -84,7 +84,10 @@ function parseWind (windString) {
   }
   let speed = parseInt(windArray.join(''), 10);
   // Normalize speed so it's always in MPS
-  if (unit === 'KT') speed = Math.round(speed / 2);
+  if (unit === 'KT') { 
+    speed = Math.round(speed / 2);
+    gust = Math.round(gust / 2);
+  };
 
   const windObject = {
     direction: direction,

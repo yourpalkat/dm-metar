@@ -15,6 +15,10 @@ class App extends Component {
     };
   }
 
+  componentDidMount() {
+    this.handleLoadData();
+  }
+
   handleLoadData = () => {
     this.setState({
       allReports: [],
@@ -35,14 +39,18 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1>
-            METAR Reports
-          </h1>
+          <div className="wrapper">
+            <h1>
+              METAR Reports
+            </h1>
+          </div>
         </header>
         <main>
-          {this.state.loading && <p>Processing reports...</p>}
-          {this.state.uniqueAirports.length > 0 && <ShowReports total={this.state.allReports.length} uniqueAirports={this.state.uniqueAirports} />}
-          <button type='button' onClick={this.handleLoadData}>Load new reports</button>
+          <div className="wrapper">
+            {this.state.loading && <p>Processing reports...</p>}
+            {this.state.uniqueAirports.length > 0 && <ShowReports total={this.state.allReports.length} uniqueAirports={this.state.uniqueAirports} />}
+            <button type="button" onClick={this.handleLoadData} className="load-button">Load new reports</button>
+          </div>
         </main>
       </div>
     );

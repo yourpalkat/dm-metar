@@ -1,31 +1,151 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans:400');
+
+:root {
+  --highlightdark: rgba(155, 160, 191, 1); 
+  --highlight: rgba(191, 195, 217, 1); 
+  --background: rgba(240, 240, 242, 1);
+  --text: rgba(50, 54, 64, 1);
+  --accent: rgba(242, 80, 80, 1);
+
+  --basefont: 'PT Sans', sans-serif;
+  --monospace: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'PT Sans', sans-serif;
+  font-weight: 400;
+  font-size: 125%; /* 20px basis */
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #eee;
+  background-color: var(--background);
+  color: var(--text);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+p {margin-bottom: 1.15rem;}
+
+h1, h2, h3, h4, h5 {
+  margin: 2.75rem 0 1.05rem;
+  font-family: var(--basefont);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -1px;
 }
 
-.App {
+h1 {
+  margin-top: 0;
+  font-size: 3.052em;
+}
+
+h2 {font-size: 2.441em;}
+
+h3 {font-size: 1.953em;}
+
+h4 {font-size: 1.563em;}
+
+h5 {font-size: 1.25em;}
+
+main {
+  padding: 2rem 0 4rem;
+}
+
+.wrapper {
   max-width: 1200px;
   margin: 0 auto 0;
   padding: 0 5%;
 }
 
-
 .App-header {
-  padding: 4rem 0;
-  color: #333;
+  padding: 4rem 0 1rem;
+  border-bottom: 3px solid var(--accent);
 }
 
-.App-link {
-  color: #61dafb;
+.load-button {
+  appearance: none;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--highlightdark);
+  color: var(--text);
+  padding: 1rem 2rem;
+  font-family: var(--basefont);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+.load-button:hover,
+.load-button:focus {
+  background-color: var(--highlight);
+  color: var(--accent);
 }
 
+.report {
+  padding-bottom: 2rem;
+}
+.report h2 {
+  border-bottom: 2px solid var(--highlightdark);
+}
+.report ul {
+  list-style: none;
+  padding: 0;
+}
+.report li {
+  display: grid;
+  grid-template-columns: minmax(60px, 1fr) minmax(180px, 2fr) minmax(150px, 2fr) 90px 60px;
+  grid-gap: 1rem;
+  margin: 0;
+  padding: 0;
+  font-family: var(--monospace);
+  font-size: 1rem;
+}
+.report li:not(:last-of-type) {
+  border-bottom: 1px solid var(--highlight);
+}
+.report .header-row {
+  background: var(--highlight);
+  font-family: var(--basefont);
+  font-weight: 600;
+  line-height: 1.25;
+  align-items: end;
+}
+.report li div {
+  padding: 0.5rem 0;
+}
+.report li div:first-of-type {
+  padding-left: 0.5rem;
+}
+
+@media (max-width: 680px) {
+  .report .header-row {
+    display: none;
+  }
+  .report li {
+    grid-template-columns: 1fr;
+  }
+  .report li div:first-of-type {
+    padding-left: 0;
+  }
+  .report li div:first-of-type::before {
+    content: 'ICAO Code: '
+  }
+  .report li div:nth-of-type(2)::before {
+    content: 'Latest wind dir/speed: '
+  }
+  .report li div:nth-of-type(3)::before {
+    content: 'Latest as of: '
+  }
+  .report li div:nth-of-type(4)::before {
+    content: 'Average windspeed: '
+  }
+  .report li div:nth-of-type(5)::before {
+    content: 'No. of reports: '
+  }
+  .report li div + div {
+    padding-top: 0;
+  }
+  .report li {
+    padding: 1rem 0;
+  }
+}

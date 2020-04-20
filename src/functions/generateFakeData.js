@@ -40,7 +40,7 @@ function generateFakeData () {
     report += 'Z ';
 
     // Wind Info
-    const direction = Math.floor(Math.random() * 360).toString();
+    const direction = Math.floor(Math.random() * 359).toString();
     // direction is always three characters
     if (direction.length === 1) {
       report += '00'; 
