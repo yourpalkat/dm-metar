@@ -50,6 +50,8 @@ main {
   padding: 2rem 0 4rem;
 }
 
+.visually-hidden:not(:focus):not(:active) { position: absolute; width: 1px; height: 1px; margin: -1px;border: 0;padding: 0;white-space: nowrap;clip-path: inset(100%);clip: rect(00 0 0);overflow: hidden;}
+
 .wrapper {
   max-width: 1200px;
   margin: 0 auto 0;
@@ -109,6 +111,8 @@ main {
   font-weight: 600;
   line-height: 1.25;
   align-items: end;
+  position: sticky;
+  top: 0;
 }
 .report li div {
   padding: 0.5rem 0;
@@ -126,6 +130,11 @@ main {
   }
   .report li div:first-of-type {
     padding-left: 0;
+  }
+  .report li div::before {
+    font-family: var(--basefont);
+    font-weight: 600;
+    margin-inline-end: 0.5rem;
   }
   .report li div:first-of-type::before {
     content: 'ICAO Code: '

@@ -39,9 +39,8 @@ const testInputArray = [
   },
 ];
 
-const testOutputArray = [
-  {
-    icaoCode: 'YYZ',
+const testOutputObject = {
+  YYZ: {
     latestWindSpeed: 10,
     latestWindGust: 0,
     latestWindDirection: '240',
@@ -52,8 +51,7 @@ const testOutputArray = [
     sumWindspeed: 30,
     totalReports: 3,
   },
-  {
-    icaoCode: 'PDX',
+  PDX: {
     latestWindSpeed: 20,
     latestWindGust: 10,
     latestWindDirection: '045',
@@ -64,8 +62,8 @@ const testOutputArray = [
     sumWindspeed: 20,
     totalReports: 1,
   },
-];
+};
 
-it('takes an array of objects and returns an array of objects, one per unique icao code', () => {
-  expect(processReports(testInputArray)).toEqual(testOutputArray);
+it('takes an array of objects and returns one object with one key per unique icao code', () => {
+  expect(processReports(testInputArray)).toEqual(testOutputObject);
 })

@@ -10,7 +10,7 @@ class App extends Component {
     super();
     this.state = {
       allReports: [],
-      uniqueAirports: [],
+      uniqueCodes: {},
       loading: false,
     };
   }
@@ -22,15 +22,15 @@ class App extends Component {
   handleLoadData = () => {
     this.setState({
       allReports: [],
-      uniqueAirports: [],
+      uniqueCodes: {},
       loading: true,
     }, async () => {
       window.scrollTo(0, 0);
       const allReports = await fetchNewReports();
-      const uniqueAirports = await processReports(allReports);
+      const uniqueCodes = await processReports(allReports);
       this.setState({
         allReports,
-        uniqueAirports,
+        uniqueCodes,
         loading: false,
       });
     });
@@ -49,7 +49,7 @@ class App extends Component {
         <main>
           <div className="wrapper">
             {this.state.loading && <p>Processing reports...</p>}
-            {this.state.uniqueAirports.length > 0 && <ShowReports total={this.state.allReports.length} uniqueAirports={this.state.uniqueAirports} />}
+            {Object.keys(this.state.uniqueCodes).length > 0 && <ShowReports total={this.state.allReports.length} uniqueCodes={this.state.uniqueCodes} />}
             <button type="button" onClick={this.handleLoadData} className="load-button">Load new reports</button>
           </div>
         </main>

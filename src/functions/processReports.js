@@ -1,17 +1,13 @@
 export default function processReports (allReports) {
   // Expects an array of report objects, each containing icaoCode, timestamp, windspeed, wind direction, wind gust
-  // Returns an array of objects, one for each unique icaoCode
-  const uniqueAirports = [];
+  // Returns one object containting one key per unique icaoCode, the value for each key is an object with average & latest data
+  const uniqueCodes = {};
 
   allReports.forEach(report => {
-    // Has this ICAO code been added to our unique array already?
-    const index = uniqueAirports.findIndex(uniqueAirport => uniqueAirport.icaoCode === report.icaoCode);
-
-    // If this code is not in our array, add a new record
-    if (index === -1) {
-      const newUniqueAirport = {
-        icaoCode: report.icaoCode,
-        latestWindSpeed: report.windSpeedInMps, // latest is the same as report
+    // If this code is not in our object, add a new record
+    if (!uniqueCodes[report.icaoCode]) {
+      uniqueCodes[report.icaoCode] = {
+        latestWindSpeed: report.windSpeedInMps, // first record, so it's automatically the latest
         latestWindGust: report.windGust,
         latestWindDirection: report.windDirection,
         latestTimeDate: report.timestampDate,
@@ -21,37 +17,36 @@ export default function processReports (allReports) {
         sumWindspeed: report.windSpeedInMps, // same as latestWinsSpeed, since there's only one record
         totalReports: 1, // this is the first record
       };
-      uniqueAirports.push(newUniqueAirport);
     } else {
-      // If the code is in our array already, then update that record
+      // If the code is in our uniques object already, then update that record
       // Copy old unique record so we're not directly mutating it
-      const updatedUniqueAirport = {...uniqueAirports[index]};
+      const updatedUniqueRecord = {...uniqueCodes[report.icaoCode]};
 
       // Update total reports and average windspeed
-      const newTotal = updatedUniqueAirport.totalReports + 1;
-      const newSumWindspeed = updatedUniqueAirport.sumWindspeed + report.windSpeedInMps;
+      const newTotal = updatedUniqueRecord.totalReports + 1;
+      const newSumWindspeed = updatedUniqueRecord.sumWindspeed + report.windSpeedInMps;
       const newAverageWindspeed = Math.round(newSumWindspeed / newTotal);
-      updatedUniqueAirport.totalReports = newTotal;
-      updatedUniqueAirport.sumWindspeed = newSumWindspeed;
-      updatedUniqueAirport.averageWindSpeed = newAverageWindspeed;
+      updatedUniqueRecord.totalReports = newTotal;
+      updatedUniqueRecord.sumWindspeed = newSumWindspeed;
+      updatedUniqueRecord.averageWindSpeed = newAverageWindspeed;
 
       // Is this record newer than the 'latest' in the file? If so, replace latest wind information & time
       if (
-        (report.timestampDate > updatedUniqueAirport.latestTimeDate) || 
-        (report.timestampDate === updatedUniqueAirport.latestTimeDate && report.timestampHour > updatedUniqueAirport.latestTimeHour) || 
-        (report.timestampDate === updatedUniqueAirport.latestTimeDate && report.timestampHour === updatedUniqueAirport.latestTimeHour)) {
-          updatedUniqueAirport.latestTimeDate = report.timestampDate;
-          updatedUniqueAirport.latestTimeHour = report.timestampHour;
-          updatedUniqueAirport.latestTimeMinute = report.timestampMinute;
-          updatedUniqueAirport.latestWindDirection = report.windDirection;
-          updatedUniqueAirport.latestWindSpeed = report.windSpeedInMps;
-          updatedUniqueAirport.latestWindGust = report.windGust;
+        (report.timestampDate > updatedUniqueRecord.latestTimeDate) || 
+        (report.timestampDate === updatedUniqueRecord.latestTimeDate && report.timestampHour > updatedUniqueRecord.latestTimeHour) || 
+        (report.timestampDate === updatedUniqueRecord.latestTimeDate && report.timestampHour === updatedUniqueRecord.latestTimeHour)) {
+          updatedUniqueRecord.latestTimeDate = report.timestampDate;
+          updatedUniqueRecord.latestTimeHour = report.timestampHour;
+          updatedUniqueRecord.latestTimeMinute = report.timestampMinute;
+          updatedUniqueRecord.latestWindDirection = report.windDirection;
+          updatedUniqueRecord.latestWindSpeed = report.windSpeedInMps;
+          updatedUniqueRecord.latestWindGust = report.windGust;
       }
 
       // Replace the old record in our unique array with the new updated one
-      uniqueAirports.splice(index, 1, updatedUniqueAirport);
+      uniqueCodes[report.icaoCode] = {...updatedUniqueRecord};
     }
   });
 
-  return uniqueAirports;
+  return uniqueCodes;
 }
